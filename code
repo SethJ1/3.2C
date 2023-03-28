@@ -1,0 +1,37 @@
+// This #include statement was automatically added by the Particle IDE.
+#include <BH1750Lib.h>
+
+bool lightstatus = false;
+
+BH1750Lib lightSensor;
+
+
+
+void setup() {
+  lightSensor.begin(BH1750LIB_MODE_CONTINUOUSHIGHRES);
+}
+
+void loop() {
+
+    uint16_t lightIntensity = lightSensor.lightLevel();
+  Serial.println(lightIntensity);
+  delay(1000);
+
+
+  String lightLevel = String(lightIntensity);
+  
+  if (lightIntensity >= 150 && lightstatus == false)
+  {
+  lightstatus = true;
+    Particle.publish("A", lightLevel, PRIVATE);
+  }
+  
+    if (lightIntensity < 150 && lightstatus == true)
+  {
+  lightstatus = false;
+   Particle.publish("A", "Dark", PRIVATE);
+  }
+  
+  
+  delay(5000);
+}
